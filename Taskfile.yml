@@ -1,0 +1,53 @@
+version: "3"
+
+vars:
+  RUNNER:
+    sh: 'echo {{ .RUNNER | default "" }}'
+  SOURCES: helpdesk_client tests
+  SOURCES_ROOT: helpdesk_client
+
+tasks:
+  lint:
+    desc: Lint python source files
+    cmd: "{{.RUNNER}} ruff check {{.SOURCES}}"
+
+  format:
+    desc: Format python source files
+    cmd: "{{.RUNNER}} ruff check {{.SOURCES}} --fix --show-fixes"
+
+  typecheck:
+    desc: Perform type-checking
+    cmd: "{{.RUNNER}} mypy {{.SOURCES}}"
+
+  deptry:
+    desc: Check used dependencies with deptry
+    cmd: "{{.RUNNER}} deptry {{.SOURCES_ROOT}}"
+
+  testcov:
+    cmds:
+      - "{{.RUNNER}} coverage run"
+      - "{{.RUNNER}} coverage report"
+
+  test-xf:
+    cmds:
+      - pytest . -vv -x
+
+  test:
+    cmds:
+      - pytest . -vv
+
+  process-codebase:
+    aliases: ["pc"]
+    desc: Run `format`, `typecheck`, `deptry`  tasks
+    cmds:
+      - task: format
+      - task: typecheck
+      - task: deptry
+
+  all:
+    desc: Run `format`, `typecheck`, `deptry`, `testcov` tasks
+    cmds:
+      - task: format
+      - task: typecheck
+      - task: deptry
+      - task: testcov

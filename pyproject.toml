@@ -1,0 +1,179 @@
+[project]
+authors = [
+  {name = "Strana Dev", email = "pypi@stranadev.ru"},
+]
+dependencies = [
+  "httpx>=0.27.0",
+  "pydantic>=2.8.2",
+  "orjson>=3.10.6",
+]
+description = "API client for ServiceDesk Plus"
+license = {text = "MIT"}
+
+name = "helpdesk-client"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "0.2.0"
+
+[project.urls]
+"Repository" = "https://github.com/stranadev/helpdesk-client"
+
+
+[build-system]
+build-backend = "pdm.backend"
+requires = ["pdm-backend"]
+
+[tool]
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+  "commitizen>=3.27.0",
+]
+lint = [
+  "deptry>=0.16.2",
+  "isort>=5.13.2",
+  "mypy>=1.10.1",
+  "radon>=6.0.1",
+  "ruff>=0.5.1",
+  "black>=24.4.2",
+]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version = "0.2.0"
+version_files = [
+  "helpdesk_client/__init__.py",
+  "pyproject.toml:version",
+]
+
+[tool.pytest.ini_options]
+pythonpath = "helpdesk_client"
+
+[tool.coverage.run]
+branch = true
+command_line = "-m pytest -v"
+concurrency = ["greenlet", "thread"]
+omit = []
+source = ["helpdesk_client"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplementedError",
+  "raise ValueError",
+  "if TYPE_CHECKING:",
+  "case _ as never:",
+  "assert_never(never)",
+]
+fail_under = 100.00
+precision = 2
+show_missing = true
+skip_covered = true
+skip_empty = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.mypy]
+exclude = ""
+plugins = [
+  "pydantic.mypy",
+]
+
+follow_imports = "silent"
+ignore_missing_imports = true
+
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_ignores = true
+
+strict = true
+strict_equality = true
+strict_optional = true
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+lint.fixable = [
+  "F",
+  "E",
+  "W",
+  "I",
+  "COM",
+  "UP",
+  "RUF",
+]
+lint.ignore = [
+  "E501", # Line Length
+  "A003", # Class attribute ... is shadowing a python builtin
+  "ANN101",
+  "ANN102",
+  "D", # pydocstyle
+  "PD", # pandas-vet
+  "INP",
+  "TCH001",
+  "TCH002",
+  "TCH003",
+  "EXE",
+  "RUF001",
+  "RUF002",
+  "RUF003",
+]
+lint.select = ["ALL"]
+src = ["helpdesk_client", "tests"]
+
+[tool.lint.ruff.per-file-ignores]
+"tests/*" = [
+  "S101",
+  "PT006", # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
+  "S311",
+]
+
+[tool.lint.ruff.flake8-pytest-style]
+fixture-parentheses = false
+
+[tool.lint.ruff.mccabe]
+max-complexity = 6
+
+[tool.lint.ruff.flake8-bugbear]
+extend-immutable-calls = []
+
+[tool.lint.ruff.pep8-naming]
+classmethod-decorators = [
+  "classmethod",
+  "pydantic.validator",
+  "pydantic.root_validator",
+]
+staticmethod-decorators = ["staticmethod"]
+
+[tool.pdm.scripts]
+lint = {composite = [
+  "ruff check . --fix --show-fixes",
+  "mypy .",
+]}
+test = {composite = [
+  "coverage run",
+  "coverage report",
+]}
+
+[tool.deptry]
+[tool.deptry.per_rule_ignores]
+DEP001 = []
+DEP002 = []
+DEP003 = [
+  "helpdesk_client",
+]
