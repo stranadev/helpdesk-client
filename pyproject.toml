@@ -10,7 +10,7 @@ dependencies = [
 description = "API client for ServiceDesk Plus"
 license = {text = "MIT"}
 
-name = "helpdesk-client"
+name = "servicedesk-client"
 readme = "README.md"
 requires-python = ">=3.11"
 version = "0.2.0"

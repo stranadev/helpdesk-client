@@ -39,13 +39,13 @@
 ### pip
 
 ```
-pip install helpdesk_client
+pip install servicedesk-client
 ```
 
 ### pdm
 
 ```
-pdm add helpdesk_client
+pdm add servicedesk-client
 ```
 
 ## 3) Пример внедрения
