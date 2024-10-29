@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Literal
 
 import httpx
 
@@ -98,6 +99,7 @@ class HelpdeskClient:
         schema: RequestUpdateSchema,
     ) -> RequestSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`, `ValueError`"""
+
         if schema.is_empty:
             msg = "Got schema with empty values"
             raise ValueError(msg)
@@ -129,11 +131,19 @@ class HelpdeskClient:
         self,
         request_id: int,
         dto: UploadFileDTO,
+        file_field: Literal["file", "input_file"] = "file",
     ) -> RequestAttachmentSchema:
-        """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+        """
+        Прикрепляет файл к заявке.
+
+        :param request_id: Идентификатор заявки
+        :param dto: `UploadFileDTO`
+        :param file_field: Наименование поля файла. В версии ServiceDesk 14.8 вместо `file` ожидается `input_file`
+        raises: `HelpdeskClientError`, `httpx.HTTPError`
+        """
 
         url = self._urls.upload_file(request_id)
-        files = {"file": (dto.filename, dto.file, dto.content_type)}
+        files = {file_field: (dto.filename, dto.file, dto.content_type)}
         response = await self._http_client.put(url, files=files)
         raise_for_status(response)
         response_schema = MainRequestAttachmentSchema.model_validate(response.json())
@@ -189,6 +199,7 @@ class HelpdeskClient:
         filter_: TemplateFilterParams,
     ) -> TemplatePaginationResponseSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.request_template
         schema = HelpdeskFilter(list_info=filter_)
         params = {
@@ -203,6 +214,7 @@ class HelpdeskClient:
         ident: int,
     ) -> TemplateSchema | None:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.template_by_id(ident)
         response = await self._http_client.get(url)
         if response.status_code == HTTPStatus.NOT_FOUND:
@@ -231,6 +243,7 @@ class HelpdeskClient:
         schema: NoteCreateSchema,
     ) -> NoteSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.create_note(request_id)
         main_schema = MainNoteCreateSchema(note=schema)
         body = {
@@ -248,6 +261,7 @@ class HelpdeskClient:
         request_id: int,
     ) -> ResolutionSchema | None:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.resolutions(request_id)
         response = await self._http_client.get(url)
         if response.status_code == HTTPStatus.NOT_FOUND:
@@ -316,6 +330,7 @@ class SyncHelpdeskClient:
         schema: RequestUpdateSchema,
     ) -> RequestSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`, `ValueError`"""
+
         if schema.is_empty:
             msg = "Got schema with empty values"
             raise ValueError(msg)
@@ -347,11 +362,19 @@ class SyncHelpdeskClient:
         self,
         request_id: int,
         dto: UploadFileDTO,
+        file_field: Literal["file", "input_file"] = "file",
     ) -> RequestAttachmentSchema:
-        """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+        """
+        Прикрепляет файл к заявке.
+
+        :param request_id: Идентификатор заявки
+        :param dto: `UploadFileDTO`
+        :param file_field: Наименование поля файла. В версии ServiceDesk 14.8 вместо `file` ожидается `input_file`
+        raises: `HelpdeskClientError`, `httpx.HTTPError`
+        """
 
         url = self._urls.upload_file(request_id)
-        files = {"file": (dto.filename, dto.file, dto.content_type)}
+        files = {file_field: (dto.filename, dto.file, dto.content_type)}
         response = self._http_client.put(url, files=files)
         raise_for_status(response)
         response_schema = MainRequestAttachmentSchema.model_validate(response.json())
@@ -407,6 +430,7 @@ class SyncHelpdeskClient:
         filter_: TemplateFilterParams,
     ) -> TemplatePaginationResponseSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.request_template
         schema = HelpdeskFilter(list_info=filter_)
         params = {
@@ -421,6 +445,7 @@ class SyncHelpdeskClient:
         ident: int,
     ) -> TemplateSchema | None:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.template_by_id(ident)
         response = self._http_client.get(url)
         if response.status_code == HTTPStatus.NOT_FOUND:
@@ -449,6 +474,7 @@ class SyncHelpdeskClient:
         schema: NoteCreateSchema,
     ) -> NoteSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.create_note(request_id)
         main_schema = MainNoteCreateSchema(note=schema)
         body = {
@@ -466,6 +492,7 @@ class SyncHelpdeskClient:
         request_id: int,
     ) -> ResolutionSchema | None:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
         url = self._urls.resolutions(request_id)
         response = self._http_client.get(url)
         if response.status_code == HTTPStatus.NOT_FOUND:
