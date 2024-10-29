@@ -1,3 +1,5 @@
+from typing import Any
+
 import pydantic
 
 from helpdesk_client.types_ import BaseSchema
@@ -28,6 +30,7 @@ class RequestCreateSchema(BaseSchema):
     template: TemplateSchema | None = None
     urgency: IdentSchema
     mode: IdentSchema | None = None
+    udf_fields: dict[str, Any] | None = None
 
 
 class RequestUpdateSchema(BaseSchema):
