@@ -131,7 +131,7 @@ class HelpdeskClient:
         self,
         request_id: int,
         dto: UploadFileDTO,
-        file_field: Literal["file", "input_file"] = "file",
+        file_field: Literal["file", "input_file"] = "input_file",
     ) -> RequestAttachmentSchema:
         """
         Прикрепляет файл к заявке.
@@ -362,7 +362,7 @@ class SyncHelpdeskClient:
         self,
         request_id: int,
         dto: UploadFileDTO,
-        file_field: Literal["file", "input_file"] = "file",
+        file_field: Literal["file", "input_file"] = "input_file",
     ) -> RequestAttachmentSchema:
         """
         Прикрепляет файл к заявке.
