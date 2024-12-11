@@ -28,7 +28,7 @@ class PaginationResponseSchema(PaginationInfo, BaseSchema):
         if self.page_ is None and self.page_number is None:
             raise ValueError
 
-        return self.page_ or self.page_number # type: ignore[return-value]
+        return self.page_ or self.page_number  # type: ignore[return-value]
 
 
 class PaginationBaseResponse(BaseSchema):
@@ -116,6 +116,7 @@ class UrgencySchema(BaseSchema):
 class CategoryPaginationResponseSchema(PaginationBaseResponse):
     categories: Sequence[CategorySchema]
 
+
 class ServiceCategoryPaginationResponseSchema(PaginationBaseResponse):
     service_categories: Sequence[CategorySchema]
 
@@ -163,6 +164,11 @@ class MainNoteSchema(BaseSchema):
 
 class ResolutionSchema(BaseSchema):
     content: Annotated[str, pydantic.BeforeValidator(remove_html_tags)]
+    raw_content: Annotated[str, pydantic.Field(alias="content")]
+    attachments: Annotated[
+        list[RequestAttachmentSchema],
+        pydantic.Field(alias="resolution_attachments"),
+    ]
     submitted_by: RequesterSchema
     submitted_on: DateTimeSchema
 
