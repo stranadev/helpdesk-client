@@ -32,6 +32,8 @@
 
 ##### 1.15) `download` - скачивает ресурс по указанному URL
 
+##### 1.16) `stream_attachment` - стримит ресурс по указанному URL
+
 <br />
 
 Все методы могут вызывать исключения `HelpdeskClientError` и `httpx.HTTPError`

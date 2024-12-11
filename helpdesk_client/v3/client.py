@@ -1,3 +1,4 @@
+from contextlib import AbstractAsyncContextManager
 from http import HTTPStatus
 from typing import Literal
 
@@ -288,6 +289,19 @@ class HelpdeskClient:
         response.raise_for_status()
         return response.content
 
+    async def stream_attachment(self, content_url: str) -> AbstractAsyncContextManager[httpx.Response]:
+        """
+        Стримит ресурс по указанному URL.
+
+        :param content_url: Примеры: 1) `content_url` из `RequestAttachmentSchema`; 2) значение атрибута `src` тега `img` из `ResolutionSchema.raw_content`.
+        raises: `httpx.HTTPError`
+        """
+
+        if content_url.startswith("/"):
+            content_url = content_url.removeprefix("/")
+
+        return await self._http_client.stream("GET", content_url)
+
 
 class SyncHelpdeskClient:
     def __init__(
@@ -536,3 +550,16 @@ class SyncHelpdeskClient:
 
         response.raise_for_status()
         return response.content
+
+    def stream_attachment(self, content_url: str) -> AbstractAsyncContextManager[httpx.Response]:
+        """
+        Стримит ресурс по указанному URL.
+
+        :param content_url: Примеры: 1) `content_url` из `RequestAttachmentSchema`; 2) значение атрибута `src` тега `img` из `ResolutionSchema.raw_content`.
+        raises: `httpx.HTTPError`
+        """
+
+        if content_url.startswith("/"):
+            content_url = content_url.removeprefix("/")
+
+        return self._http_client.stream("GET", content_url)
