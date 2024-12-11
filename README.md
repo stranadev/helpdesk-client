@@ -30,6 +30,8 @@
 
 ##### 1.14) `get_resolution` - получение решения заявки
 
+##### 1.15) `download` - скачивает ресурс по указанному URL
+
 <br />
 
 Все методы могут вызывать исключения `HelpdeskClientError` и `httpx.HTTPError`
