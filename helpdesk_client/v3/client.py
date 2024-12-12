@@ -1,4 +1,4 @@
-from contextlib import AbstractAsyncContextManager
+from contextlib import AbstractAsyncContextManager, AbstractContextManager
 from http import HTTPStatus
 from typing import Literal
 
@@ -286,10 +286,10 @@ class HelpdeskClient:
         if response.status_code == HTTPStatus.NOT_FOUND:
             return None
 
-        response.raise_for_status()
+        raise_for_status(response)
         return response.content
 
-    async def stream_attachment(self, content_url: str) -> AbstractAsyncContextManager[httpx.Response]:
+    def stream(self, content_url: str) -> AbstractAsyncContextManager[httpx.Response]:
         """
         Стримит ресурс по указанному URL.
 
@@ -300,7 +300,7 @@ class HelpdeskClient:
         if content_url.startswith("/"):
             content_url = content_url.removeprefix("/")
 
-        return await self._http_client.stream("GET", content_url)
+        return self._http_client.stream("GET", content_url)
 
 
 class SyncHelpdeskClient:
@@ -548,10 +548,10 @@ class SyncHelpdeskClient:
         if response.status_code == HTTPStatus.NOT_FOUND:
             return None
 
-        response.raise_for_status()
+        raise_for_status(response)
         return response.content
 
-    def stream_attachment(self, content_url: str) -> AbstractAsyncContextManager[httpx.Response]:
+    def stream(self, content_url: str) -> AbstractContextManager[httpx.Response]:
         """
         Стримит ресурс по указанному URL.
 
