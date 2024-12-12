@@ -30,9 +30,13 @@
 
 ##### 1.14) `get_resolution` - получение решения заявки
 
+##### 1.15) `download` - скачивает ресурс по указанному URL
+
+##### 1.16) `stream` - стримит ресурс по указанному URL
+
 <br />
 
-Все методы могут вызывать исключения `HelpdeskClientError` и `httpx.HTTPError`
+Все методы могут вызывать исключения `HelpdeskClientError` и `httpx.HTTPError` (`stream` только `httpx.HTTPError`)
 
 ## 2) Установка
 

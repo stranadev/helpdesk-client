@@ -1,3 +1,4 @@
+from contextlib import AbstractAsyncContextManager, AbstractContextManager
 from http import HTTPStatus
 from typing import Literal
 
@@ -270,6 +271,37 @@ class HelpdeskClient:
         raise_for_status(response)
         return MainResolutionSchema.model_validate(response.json()).resolution
 
+    async def download(self, content_url: str) -> bytes | None:
+        """
+        Скачивает ресурс по указанному URL.
+
+        :param content_url: Примеры: 1) `content_url` из `RequestAttachmentSchema`; 2) значение атрибута `src` тега `img` из `ResolutionSchema.raw_content`.
+        raises: `HelpdeskClientError`, `httpx.HTTPError`
+        """
+
+        if content_url.startswith("/"):
+            content_url = content_url.removeprefix("/")
+
+        response = await self._http_client.get(content_url)
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            return None
+
+        raise_for_status(response)
+        return response.content
+
+    def stream(self, content_url: str) -> AbstractAsyncContextManager[httpx.Response]:
+        """
+        Стримит ресурс по указанному URL.
+
+        :param content_url: Примеры: 1) `content_url` из `RequestAttachmentSchema`; 2) значение атрибута `src` тега `img` из `ResolutionSchema.raw_content`.
+        raises: `httpx.HTTPError`
+        """
+
+        if content_url.startswith("/"):
+            content_url = content_url.removeprefix("/")
+
+        return self._http_client.stream("GET", content_url)
+
 
 class SyncHelpdeskClient:
     def __init__(
@@ -500,3 +532,34 @@ class SyncHelpdeskClient:
 
         raise_for_status(response)
         return MainResolutionSchema.model_validate(response.json()).resolution
+
+    def download(self, content_url: str) -> bytes | None:
+        """
+        Скачивает ресурс по указанному URL.
+
+        :param content_url: Примеры: 1) `content_url` из `RequestAttachmentSchema`; 2) значение атрибута `src` тега `img` из `ResolutionSchema.raw_content`.
+        raises: `HelpdeskClientError`, `httpx.HTTPError`
+        """
+
+        if content_url.startswith("/"):
+            content_url = content_url.removeprefix("/")
+
+        response = self._http_client.get(content_url)
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            return None
+
+        raise_for_status(response)
+        return response.content
+
+    def stream(self, content_url: str) -> AbstractContextManager[httpx.Response]:
+        """
+        Стримит ресурс по указанному URL.
+
+        :param content_url: Примеры: 1) `content_url` из `RequestAttachmentSchema`; 2) значение атрибута `src` тега `img` из `ResolutionSchema.raw_content`.
+        raises: `httpx.HTTPError`
+        """
+
+        if content_url.startswith("/"):
+            content_url = content_url.removeprefix("/")
+
+        return self._http_client.stream("GET", content_url)
