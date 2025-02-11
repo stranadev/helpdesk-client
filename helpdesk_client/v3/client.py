@@ -257,6 +257,30 @@ class HelpdeskClient:
         raise_for_status(response)
         return MainNoteSchema.model_validate(response.json()).note
 
+    async def attach_file_to_note(
+        self,
+        request_id: int,
+        note_id: int,
+        dto: UploadFileDTO,
+        file_field: Literal["file", "input_file"] = "input_file",
+    ) -> RequestAttachmentSchema:
+        """
+        Прикрепляет файл к комментарию/обсуждению.
+
+        :param request_id: Идентификатор заявки
+        :param note_id: Идентификатор комментария/обсуждения
+        :param dto: `UploadFileDTO`
+        :param file_field: Наименование поля файла. В версии ServiceDesk 14.8 вместо `file` ожидается `input_file`
+        raises: `HelpdeskClientError`, `httpx.HTTPError`
+        """
+
+        url = self._urls.upload_note_file(request_id=request_id, note_id=note_id)
+        files = {file_field: (dto.filename, dto.file, dto.content_type)}
+        response = await self._http_client.put(url, files=files)
+        raise_for_status(response)
+        response_schema = MainRequestAttachmentSchema.model_validate(response.json())
+        return response_schema.attachment
+
     async def get_resolution(
         self,
         request_id: int,
@@ -518,6 +542,30 @@ class SyncHelpdeskClient:
         response = self._http_client.post(url, data=body)
         raise_for_status(response)
         return MainNoteSchema.model_validate(response.json()).note
+
+    def attach_file_to_note(
+        self,
+        request_id: int,
+        note_id: int,
+        dto: UploadFileDTO,
+        file_field: Literal["file", "input_file"] = "input_file",
+    ) -> RequestAttachmentSchema:
+        """
+        Прикрепляет файл к комментарию/обсуждению.
+
+        :param request_id: Идентификатор заявки
+        :param note_id: Идентификатор комментария/обсуждения
+        :param dto: `UploadFileDTO`
+        :param file_field: Наименование поля файла. В версии ServiceDesk 14.8 вместо `file` ожидается `input_file`
+        raises: `HelpdeskClientError`, `httpx.HTTPError`
+        """
+
+        url = self._urls.upload_note_file(request_id=request_id, note_id=note_id)
+        files = {file_field: (dto.filename, dto.file, dto.content_type)}
+        response = self._http_client.put(url, files=files)
+        raise_for_status(response)
+        response_schema = MainRequestAttachmentSchema.model_validate(response.json())
+        return response_schema.attachment
 
     def get_resolution(
         self,

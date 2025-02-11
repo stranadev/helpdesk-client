@@ -32,5 +32,9 @@ class HelpdeskUrls:
         return f"{cls.requests}/{request_id}/notes"
 
     @classmethod
+    def upload_note_file(cls, request_id: int, note_id: int) -> str:
+        return f"{cls.requests}/{request_id}/notes/{note_id}/upload"
+
+    @classmethod
     def resolutions(cls, request_id: int) -> str:
         return f"{cls.requests}/{request_id}/resolutions"
