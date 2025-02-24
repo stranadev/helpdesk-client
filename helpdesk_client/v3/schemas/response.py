@@ -60,6 +60,7 @@ class RequestSchema(BaseSchema):
     description: str | None = None
     created_time: DateTimeSchema
     due_by_time: DateTimeSchema | None = None
+    completed_time: DateTimeSchema | None = None
     group: HasNameSchema
     status: HasNameSchema
     requester: RequesterSchema
