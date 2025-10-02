@@ -7,7 +7,7 @@ import pydantic
 from helpdesk_client.types_ import BaseSchema
 from helpdesk_client.utils import remove_html_tags
 
-from .pagination import PaginationInfo
+from .pagination import PagePaginationInfo, PaginationInfo
 
 
 class PaginationResponseSchema(PaginationInfo, BaseSchema):
@@ -33,6 +33,15 @@ class PaginationResponseSchema(PaginationInfo, BaseSchema):
 
 class PaginationBaseResponse(BaseSchema):
     list_info: PaginationResponseSchema
+
+
+class PagePaginationResponseSchema(PagePaginationInfo, BaseSchema):
+    has_next: bool = pydantic.Field(alias="has_more_rows")
+    total_count: int | None = None
+
+
+class PagePaginationBaseResponse(BaseSchema):
+    list_info: PagePaginationResponseSchema
 
 
 class HasNameSchema(BaseSchema):
@@ -65,7 +74,9 @@ class RequestSchema(BaseSchema):
     status: HasNameSchema
     requester: RequesterSchema
     technician: RequesterSchema | None = None
-    attachments: Sequence["RequestAttachmentSchema"] = pydantic.Field(default_factory=list)
+    attachments: Sequence["RequestAttachmentSchema"] = pydantic.Field(
+        default_factory=list,
+    )
     urgency: "ShortUrgencySchema | None" = None
 
 
@@ -112,6 +123,10 @@ class UrgencySchema(BaseSchema):
     name: str
     description: str | None = None
     is_deleted: bool = pydantic.Field(alias="deleted")
+
+
+class RequestPaginationResponseSchema(PagePaginationBaseResponse):
+    requests: Sequence[RequestSchema]
 
 
 class CategoryPaginationResponseSchema(PaginationBaseResponse):

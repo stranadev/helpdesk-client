@@ -17,6 +17,7 @@ from helpdesk_client.v3.schemas.body import (
 from helpdesk_client.v3.schemas.query_params import (
     CategoryFilterParams,
     HelpdeskFilter,
+    RequestFilterPagePaginationParams,
     RequestFilterParams,
     SubcategoryFilterParams,
     TemplateFilterParams,
@@ -29,6 +30,7 @@ from helpdesk_client.v3.schemas.response import (
     MainResolutionSchema,
     NoteSchema,
     RequestAttachmentSchema,
+    RequestPaginationResponseSchema,
     RequestSchema,
     ResolutionSchema,
     ServiceCategoryPaginationResponseSchema,
@@ -75,6 +77,20 @@ class HelpdeskClient:
         response = await self._http_client.get(self._urls.requests, params=params)
         raise_for_status(response)
         return RequestListSchema.model_validate(response.json())
+
+    async def get_requests_page_paginated(
+        self,
+        filter_: RequestFilterPagePaginationParams,
+    ) -> RequestPaginationResponseSchema:
+        """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
+        schema = HelpdeskFilter(list_info=filter_)
+        params = {
+            "input_data": schema.model_dump_json(by_alias=True, exclude_unset=True),
+        }
+        response = await self._http_client.get(self._urls.requests, params=params)
+        raise_for_status(response)
+        return RequestPaginationResponseSchema.model_validate(response.json())
 
     async def create_request(
         self,
@@ -361,6 +377,20 @@ class SyncHelpdeskClient:
         response = self._http_client.get(self._urls.requests, params=params)
         raise_for_status(response)
         return RequestListSchema.model_validate(response.json())
+
+    def get_requests_page_paginated(
+        self,
+        filter_: RequestFilterPagePaginationParams,
+    ) -> RequestPaginationResponseSchema:
+        """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
+        schema = HelpdeskFilter(list_info=filter_)
+        params = {
+            "input_data": schema.model_dump_json(by_alias=True, exclude_unset=True),
+        }
+        response = self._http_client.get(self._urls.requests, params=params)
+        raise_for_status(response)
+        return RequestPaginationResponseSchema.model_validate(response.json())
 
     def create_request(
         self,

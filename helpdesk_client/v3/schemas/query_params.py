@@ -7,7 +7,7 @@ from helpdesk_client.enums import SortEnum
 from helpdesk_client.types_ import BaseSchema
 from helpdesk_client.utils import json_dump_model
 
-from .pagination import PaginationInfo
+from .pagination import PagePaginationInfo, PaginationInfo
 
 
 class OrderingParams(BaseSchema):
@@ -52,6 +52,10 @@ class RequestFilterParams(PaginationInfo, OrderingParams, BaseSchema):
     search_fields: JsonDumpedRequestSearchFields = None
 
 
+class RequestFilterPagePaginationParams(PagePaginationInfo, OrderingParams, BaseSchema):
+    search_fields: JsonDumpedRequestSearchFields = None
+
+
 class CategoryFilterParams(PaginationInfo, OrderingParams, BaseSchema):
     search_fields: Annotated[
         CategorySearchFields | None,
@@ -83,6 +87,7 @@ class TemplateFilterParams(PaginationInfo, OrderingParams, BaseSchema):
 class HelpdeskFilter(BaseSchema):
     list_info: (
         RequestFilterParams
+        | RequestFilterPagePaginationParams
         | CategoryFilterParams
         | SubcategoryFilterParams
         | UrgencyFilterParams
