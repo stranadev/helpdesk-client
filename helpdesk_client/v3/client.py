@@ -17,6 +17,7 @@ from helpdesk_client.v3.schemas.body import (
 from helpdesk_client.v3.schemas.query_params import (
     CategoryFilterParams,
     HelpdeskFilter,
+    RequestCriteriaFilterPagePaginationParams,
     RequestFilterPagePaginationParams,
     RequestFilterParams,
     SubcategoryFilterParams,
@@ -80,7 +81,10 @@ class HelpdeskClient:
 
     async def get_requests_page_paginated(
         self,
-        filter_: RequestFilterPagePaginationParams,
+        filter_: (
+            RequestFilterPagePaginationParams
+            | RequestCriteriaFilterPagePaginationParams
+        ),
     ) -> RequestPaginationResponseSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
 
@@ -380,7 +384,10 @@ class SyncHelpdeskClient:
 
     def get_requests_page_paginated(
         self,
-        filter_: RequestFilterPagePaginationParams,
+        filter_: (
+            RequestFilterPagePaginationParams
+            | RequestCriteriaFilterPagePaginationParams
+        ),
     ) -> RequestPaginationResponseSchema:
         """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
 
