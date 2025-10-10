@@ -32,12 +32,12 @@ dev = [
   "commitizen>=3.27.0",
 ]
 lint = [
-  "deptry>=0.16.2",
-  "isort>=5.13.2",
-  "mypy>=1.10.1",
-  "radon>=6.0.1",
-  "ruff>=0.5.1",
-  "black>=24.4.2",
+    "deptry>=0.16.2",
+    "isort>=5.13.2",
+    "mypy>=1.10.1",
+    "radon>=6.0.1",
+    "ruff>=0.13.3",
+    "black>=24.4.2",
 ]
 
 [tool.commitizen]
@@ -120,14 +120,12 @@ lint.fixable = [
 lint.ignore = [
   "E501", # Line Length
   "A003", # Class attribute ... is shadowing a python builtin
-  "ANN101",
-  "ANN102",
   "D", # pydocstyle
   "PD", # pandas-vet
   "INP",
-  "TCH001",
-  "TCH002",
-  "TCH003",
+  "TC001",
+  "TC002",
+  "TC003",
   "EXE",
   "RUF001",
   "RUF002",
