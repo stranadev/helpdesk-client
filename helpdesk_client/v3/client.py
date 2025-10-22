@@ -28,11 +28,13 @@ from helpdesk_client.v3.schemas.response import (
     CategoryPaginationResponseSchema,
     MainNoteSchema,
     MainRequestAttachmentSchema,
+    MainRequestWithResolutionSchema,
     MainResolutionSchema,
     NoteSchema,
     RequestAttachmentSchema,
     RequestPaginationResponseSchema,
     RequestSchema,
+    RequestWithResolutionSchema,
     ResolutionSchema,
     ServiceCategoryPaginationResponseSchema,
     SubcategoryPaginationResponseSchema,
@@ -63,6 +65,21 @@ class HelpdeskClient:
 
         raise_for_status(response)
         schema = MainRequestSchema.model_validate(response.json())
+        return schema.request
+
+    async def get_request_with_resolution(
+        self,
+        ident: int,
+    ) -> RequestWithResolutionSchema | None:
+        """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
+        url = self._urls.request_by_id(ident)
+        response = await self._http_client.get(url)
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            return None
+
+        raise_for_status(response)
+        schema = MainRequestWithResolutionSchema.model_validate(response.json())
         return schema.request
 
     async def get_requests(
@@ -366,6 +383,21 @@ class SyncHelpdeskClient:
 
         raise_for_status(response)
         schema = MainRequestSchema.model_validate(response.json())
+        return schema.request
+
+    def get_request_with_resolution(
+        self,
+        ident: int,
+    ) -> RequestWithResolutionSchema | None:
+        """raises: `HelpdeskClientError`, `httpx.HTTPError`"""
+
+        url = self._urls.request_by_id(ident)
+        response = self._http_client.get(url)
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            return None
+
+        raise_for_status(response)
+        schema = MainRequestWithResolutionSchema.model_validate(response.json())
         return schema.request
 
     def get_requests(

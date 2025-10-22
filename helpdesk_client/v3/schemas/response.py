@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any
 
 import pydantic
 
@@ -80,12 +80,32 @@ class RequestSchema(BaseSchema):
     urgency: "ShortUrgencySchema | None" = None
 
 
+class RequestWithResolutionSchema(RequestSchema):
+    resolution: "ResolutionBaseSchema | None"
+
+    @pydantic.model_validator(mode="before")
+    @classmethod
+    def normalize_resolution(cls, data: dict[str, Any]) -> dict[str, Any]:
+        resolution = data.get("resolution")
+        if (
+            resolution
+            and resolution.get("content") is None
+            and resolution.get("resolution_attachments") == []
+        ):
+            data["resolution"] = None
+        return data
+
+
 class RequestListSchema(BaseSchema):
     requests: list[RequestSchema]
 
 
 class MainRequestSchema(BaseSchema):
     request: RequestSchema
+
+
+class MainRequestWithResolutionSchema(BaseSchema):
+    request: RequestWithResolutionSchema
 
 
 class CategorySchema(BaseSchema):
@@ -176,6 +196,16 @@ class NoteSchema(BaseSchema):
 
 class MainNoteSchema(BaseSchema):
     note: NoteSchema
+
+
+class ResolutionBaseSchema(BaseSchema):
+    content: str
+    attachments: Annotated[
+        list[RequestAttachmentSchema],
+        pydantic.Field(alias="resolution_attachments"),
+    ]
+    submitted_by: RequesterSchema
+    submitted_on: DateTimeSchema
 
 
 class ResolutionSchema(BaseSchema):
