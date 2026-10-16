@@ -23,6 +23,9 @@ class HelpdeskClientError(Exception):
             return None
 
         with suppress(JSONDecodeError):
-            return orjson.loads(self.response_data) # type: ignore[no-any-return]
+            return orjson.loads(self.response_data)  # type: ignore[no-any-return]
 
         return None
+
+
+class OutdatedClientWarning(UserWarning): ...

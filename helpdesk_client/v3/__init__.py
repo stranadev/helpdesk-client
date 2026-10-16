@@ -1,4 +1,5 @@
 from .client import HelpdeskClient, SyncHelpdeskClient
+from .client2 import HelpdeskClient2, SyncHelpdeskClient2
 from .dto import UploadFileDTO
 from .schemas import (
     CategoryFilterParams,
@@ -63,6 +64,7 @@ __all__ = [
     "FileSizeSchema",
     "HasNameSchema",
     "HelpdeskClient",
+    "HelpdeskClient2",
     "HelpdeskFilter",
     "HelpdeskUrls",
     "IdentSchema",
@@ -101,6 +103,7 @@ __all__ = [
     "SubcategorySchema",
     "SubcategorySearchFields",
     "SyncHelpdeskClient",
+    "SyncHelpdeskClient2",
     "TemplateFilterParams",
     "TemplateSchema",
     "TemplateSearchFields",

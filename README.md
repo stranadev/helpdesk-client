@@ -72,6 +72,7 @@ class HelpdeskSettings(BaseSettings):
 ```python
 HelpdeskHttpClient = NewType("HelpdeskHttpClient", httpx.AsyncClient)
 
+
 @asynccontextmanager
 async def get_helpdesk_http_client(
     settings: HelpdeskSettings,
