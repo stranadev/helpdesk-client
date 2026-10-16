@@ -13,7 +13,7 @@ license = {text = "MIT"}
 
 name = "servicedesk-client"
 readme = "README.md"
-requires-python = "==3.11.*"
+requires-python = ">=3.11"
 version = "0.4.3"
 
 [project.urls]
