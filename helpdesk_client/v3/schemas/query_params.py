@@ -57,7 +57,7 @@ class TemplateSearchFields(BaseSchema):
 
 JsonDumpedRequestSearchFields = Annotated[
     RequestSearchFields | None,
-    PlainSerializer(lambda model: json_dump_model(model), when_used="json"),
+    PlainSerializer(lambda model: json_dump_model(model), when_used="json"),  # noqa: PLW0108
 ]
 
 
@@ -106,28 +106,28 @@ class RequestCriteriaFilterPagePaginationParams(
 class CategoryFilterParams(PaginationInfo, OrderingParams, BaseSchema):
     search_fields: Annotated[
         CategorySearchFields | None,
-        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),
+        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),  # noqa: PLW0108
     ] = None
 
 
 class SubcategoryFilterParams(PaginationInfo, OrderingParams, BaseSchema):
     search_fields: Annotated[
         SubcategorySearchFields | None,
-        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),
+        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),  # noqa: PLW0108
     ] = None
 
 
 class UrgencyFilterParams(PaginationInfo, OrderingParams, BaseSchema):
     search_fields: Annotated[
         UrgencySearchFields | None,
-        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),
+        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),  # noqa: PLW0108
     ] = None
 
 
 class TemplateFilterParams(PaginationInfo, OrderingParams, BaseSchema):
     search_fields: Annotated[
         TemplateSearchFields | None,
-        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),
+        PlainSerializer(lambda model: json_dump_model(model), when_used="json"),  # noqa: PLW0108
     ] = None
 
 

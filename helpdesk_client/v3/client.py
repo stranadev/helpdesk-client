@@ -1,10 +1,12 @@
+import warnings
 from contextlib import AbstractAsyncContextManager, AbstractContextManager
 from http import HTTPStatus
 from typing import Literal
 
 import httpx
 
-from helpdesk_client.utils import raise_for_status
+from helpdesk_client.exceptions import OutdatedClientWarning
+from helpdesk_client.utils.httpx_ import raise_for_status
 from helpdesk_client.v3.dto import UploadFileDTO
 from helpdesk_client.v3.schemas.body import (
     MainNoteCreateSchema,
@@ -52,6 +54,12 @@ class HelpdeskClient:
         http_client: httpx.AsyncClient,
         urls: HelpdeskUrls | None = None,
     ) -> None:
+        warnings.warn(
+            "'HelpdeskClient' is based on unmaintained 'httpx'. "
+            "Use 'HelpdeskClient2' (based on 'httpx2') instead.",
+            OutdatedClientWarning,
+            stacklevel=2,
+        )
         self._http_client = http_client
         self._urls = urls or HelpdeskUrls()
 
@@ -370,6 +378,12 @@ class SyncHelpdeskClient:
         http_client: httpx.Client,
         urls: HelpdeskUrls | None = None,
     ) -> None:
+        warnings.warn(
+            "'SyncHelpdeskClient' is based on unmaintained 'httpx'. "
+            "Use 'SyncHelpdeskClient2' (based on 'httpx2') instead.",
+            OutdatedClientWarning,
+            stacklevel=2,
+        )
         self._http_client = http_client
         self._urls = urls or HelpdeskUrls()
 

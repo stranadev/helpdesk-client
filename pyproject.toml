@@ -3,9 +3,10 @@ authors = [
   {name = "Strana Dev", email = "pypi@stranadev.ru"},
 ]
 dependencies = [
-  "httpx>=0.27.0",
-  "pydantic>=2.8.2",
-  "orjson>=3.10.6",
+    "httpx>=0.27.0",
+    "pydantic>=2.8.2",
+    "orjson>=3.10.6",
+    "httpx2>=2.13.1",
 ]
 description = "API client for ServiceDesk Plus"
 license = {text = "MIT"}
@@ -33,11 +34,9 @@ dev = [
 ]
 lint = [
     "deptry>=0.16.2",
-    "isort>=5.13.2",
     "mypy>=1.10.1",
     "radon>=6.0.1",
     "ruff>=0.13.3",
-    "black>=24.4.2",
 ]
 
 [tool.commitizen]
@@ -104,9 +103,6 @@ strict = true
 strict_equality = true
 strict_optional = true
 
-[tool.isort]
-profile = "black"
-
 [tool.ruff]
 lint.fixable = [
   "F",
@@ -120,6 +116,8 @@ lint.fixable = [
 lint.ignore = [
   "E501", # Line Length
   "A003", # Class attribute ... is shadowing a python builtin
+  "CPY001",
+  "COM812",
   "D", # pydocstyle
   "PD", # pandas-vet
   "INP",
@@ -161,6 +159,9 @@ staticmethod-decorators = ["staticmethod"]
 [tool.pdm.scripts]
 lint = {composite = [
   "ruff check . --fix --show-fixes",
+  "ruff format .",
+  "ruff check . --fix --show-fixes",
+  "deptry .",
   "mypy .",
 ]}
 test = {composite = [
