@@ -2,9 +2,8 @@ version: "3"
 
 vars:
   RUNNER:
-    sh: 'echo {{ .RUNNER | default "" }}'
-  SOURCES: helpdesk_client tests
-  SOURCES_ROOT: helpdesk_client
+    sh: 'echo {{ .RUNNER | default "uv run" }}'
+  SOURCES: .
 
 tasks:
   lint:
@@ -21,7 +20,7 @@ tasks:
 
   deptry:
     desc: Check used dependencies with deptry
-    cmd: "{{.RUNNER}} deptry {{.SOURCES_ROOT}}"
+    cmd: "{{.RUNNER}} deptry {{.SOURCES}}"
 
   testcov:
     cmds:
@@ -30,11 +29,11 @@ tasks:
 
   test-xf:
     cmds:
-      - pytest . -vv -x
+      - "{{.RUNNER}} pytest . -vv -x"
 
   test:
     cmds:
-      - pytest . -vv
+      - "{{.RUNNER}} pytest . -vv"
 
   process-codebase:
     aliases: ["pc"]

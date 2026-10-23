@@ -21,23 +21,26 @@ version = "0.5.0"
 
 
 [build-system]
-build-backend = "pdm.backend"
-requires = ["pdm-backend"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
-[tool]
-[tool.pdm]
-distribution = true
-
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
   "commitizen>=3.27.0",
 ]
 lint = [
     "deptry>=0.16.2",
-    "mypy>=1.10.1",
+    "mypy>=2.4.0",
     "radon>=6.0.1",
-    "ruff>=0.13.3",
+    "ruff>=0.17.2",
 ]
+test = [
+    "coverage>=7.17.0",
+    "pytest>=9.1.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["helpdesk_client"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -54,7 +57,7 @@ pythonpath = "helpdesk_client"
 [tool.coverage.run]
 branch = true
 command_line = "-m pytest -v"
-concurrency = ["greenlet", "thread"]
+concurrency = []
 omit = []
 source = ["helpdesk_client"]
 
@@ -132,42 +135,29 @@ lint.ignore = [
 lint.select = ["ALL"]
 src = ["helpdesk_client", "tests"]
 
-[tool.lint.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = [
   "S101",
   "PT006", # Wrong name(s) type in `@pytest.mark.parametrize`, expected `tuple`
   "S311",
 ]
 
-[tool.lint.ruff.flake8-pytest-style]
+[tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = false
 
-[tool.lint.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 6
 
-[tool.lint.ruff.flake8-bugbear]
+[tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = []
 
-[tool.lint.ruff.pep8-naming]
+[tool.ruff.lint.pep8-naming]
 classmethod-decorators = [
   "classmethod",
   "pydantic.validator",
   "pydantic.root_validator",
 ]
 staticmethod-decorators = ["staticmethod"]
-
-[tool.pdm.scripts]
-lint = {composite = [
-  "ruff check . --fix --show-fixes",
-  "ruff format .",
-  "ruff check . --fix --show-fixes",
-  "deptry .",
-  "mypy .",
-]}
-test = {composite = [
-  "coverage run",
-  "coverage report",
-]}
 
 [tool.deptry]
 [tool.deptry.per_rule_ignores]

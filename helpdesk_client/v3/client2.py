@@ -4,6 +4,7 @@ from typing import Literal
 
 import httpx2
 
+from helpdesk_client.utils._utils import build_files
 from helpdesk_client.utils.httpx2_ import raise_for_status
 from helpdesk_client.v3.dto import UploadFileDTO
 from helpdesk_client.v3.schemas.body import (
@@ -181,7 +182,7 @@ class HelpdeskClient2:
         """
 
         url = self._urls.upload_file(request_id)
-        files = {file_field: (dto.filename, dto.file, dto.content_type)}
+        files = build_files(file_field, dto)
         response = await self._http_client.put(url, files=files)
         raise_for_status(response)
         response_schema = MainRequestAttachmentSchema.model_validate(response.json())
@@ -312,7 +313,7 @@ class HelpdeskClient2:
         """
 
         url = self._urls.upload_note_file(request_id=request_id, note_id=note_id)
-        files = {file_field: (dto.filename, dto.file, dto.content_type)}
+        files = build_files(file_field, dto)
         response = await self._http_client.put(url, files=files)
         raise_for_status(response)
         response_schema = MainRequestAttachmentSchema.model_validate(response.json())
@@ -499,7 +500,7 @@ class SyncHelpdeskClient2:
         """
 
         url = self._urls.upload_file(request_id)
-        files = {file_field: (dto.filename, dto.file, dto.content_type)}
+        files = build_files(file_field, dto)
         response = self._http_client.put(url, files=files)
         raise_for_status(response)
         response_schema = MainRequestAttachmentSchema.model_validate(response.json())
@@ -630,7 +631,7 @@ class SyncHelpdeskClient2:
         """
 
         url = self._urls.upload_note_file(request_id=request_id, note_id=note_id)
-        files = {file_field: (dto.filename, dto.file, dto.content_type)}
+        files = build_files(file_field, dto)
         response = self._http_client.put(url, files=files)
         raise_for_status(response)
         response_schema = MainRequestAttachmentSchema.model_validate(response.json())
