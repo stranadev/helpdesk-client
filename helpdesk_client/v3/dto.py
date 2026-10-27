@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from io import BufferedReader
+from typing import IO
 
 
 @dataclass(frozen=True, slots=True)
 class UploadFileDTO:
-    file: BufferedReader
+    file: IO[bytes]
     filename: str
     content_type: str
