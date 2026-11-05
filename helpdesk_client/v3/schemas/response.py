@@ -70,7 +70,7 @@ class RequestSchema(BaseSchema):
     created_time: DateTimeSchema
     due_by_time: DateTimeSchema | None = None
     completed_time: DateTimeSchema | None = None
-    group: HasNameSchema
+    group: HasNameSchema | None = None
     status: HasNameSchema
     requester: RequesterSchema
     technician: RequesterSchema | None = None
