@@ -50,6 +50,10 @@ version_files = [
   "helpdesk_client/__init__.py",
   "pyproject.toml:version",
 ]
+pre_bump_hooks = [
+  "uv lock",
+  "git add uv.lock"
+]
 
 [tool.pytest.ini_options]
 pythonpath = "helpdesk_client"
